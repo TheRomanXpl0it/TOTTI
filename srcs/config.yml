@@ -1,0 +1,26 @@
+log_level: debug
+
+team: 9
+number_of_teams: 43
+team_token: "" # Remember to edit the team token
+
+
+team_format: "10.60.%d.1"
+
+round_duration: 120
+flag_alive: 5
+flag_format: "[A-Z0-9]{31}="
+
+flagid_url: "http://10.10.0.1:8081/flagIds"
+
+sub_protocol: "ccit"
+sub_limit: 1
+#sub_interval: 5
+sub_interval: 20
+#sub_max_payload_size: 30
+sub_max_payload_size: 2000
+#sub_url: "http://172.31.207.108:8000"
+sub_url: "http://10.10.0.1:8080/flags"
+start_round: "2024-06-23 21:00:00" # "Y-m-d H:M:S"
+
+database: "mongodb://mongo:27017"

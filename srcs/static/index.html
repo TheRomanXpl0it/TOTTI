@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>TOTTI</title>
+	<script src="https://unpkg.com/htmx.org@1.5.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<style>
+		body {
+			display: flex;
+			margin: 0;
+			background-color: rgb(23, 24, 25);
+		}
+		.aParent div {
+			float: left;
+			clear: none;
+		}
+	</style>
+</head>
+<body hx-get="/data" hx-trigger="load, every 5s" hx-swap="none" hx-target="this" hx-indicator="#loading">
+
+	<div class="row">
+
+		<div class="aParent">
+			<div>
+				<canvas id="SubmittedFlags"></canvas>
+			</div>
+			<div>
+				<canvas id="Exploits" style="max-height:300px;min-width:1000px;"></canvas>
+			</div>
+
+			<div>
+				<select name="length" onchange="changeStart(this.value)">
+					<option value="0">all</option>
+					<option value="l20">20-ticks</option>
+					<option value="l10">10-ticks</option>
+					<option value="l5">5-ticks</option>
+					<option value="l2">2-ticks</option>
+					<option value="l1">1-ticks</option>
+				</select>
+			</div>
+			
+			<div>
+				<select id="exploit" onchange="changeExploit(this.value)">
+					<option value="">all</option>
+				</select>
+			</div>
+
+			<div>
+				<input type="text" placeholder="Manual Flag" id="flagInput">
+				<button onclick="submitFlag()">Submit</button>
+			</div>
+		</div>
+
+		<div class="col">
+			<canvas id="Teams" style="max-height:300px;min-width:1600px;"></canvas>
+		</div>
+		
+		<div id="RoundsParent" class="col">
+			<canvas id="Rounds" style="max-height:200px;min-width:1600px;"></canvas>
+		</div>
+
+	</div>
+
+	<script src="charts.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+
+Needed:
+	frontend
+	spinning trx logo
+	resolve all TODOs into the code (better performance/logging)
+	production dockerfile/compose (todo post frontend)
+
+Useful:
+	colorful/better logs
+	config reloader (hot realod of config file || button to reload)
+	api/button to delete/remove the flag queue
+	api/button to send flags, instead of waiting the timer
+	can take startup flags to change options (like config.json path)
+
+Not so needed but game changing:
+	beep when errors || ping on telegram/discord as bot
+	maybe better flagids store/retrive
+	client rewrite
+	client option to submit directly to gameserver
+	load balancer
+

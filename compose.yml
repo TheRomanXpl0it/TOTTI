@@ -1,0 +1,25 @@
+services:
+  
+  mongo:
+    image: mongo:5
+    restart: always
+
+  submitter:
+    build: ./srcs/
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - "5000:5000"
+
+# DEVELOPEMENT
+#    volumes:
+#      - src:/app/
+
+# volumes:
+#   src:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: ./srcs/
