@@ -35,6 +35,8 @@ func loadSubmitter(conf *config.Config) SubmitterInterface {
 		return newDummySubmitter(conf)
 	case "ccit":
 		return newCCITSubmitter(conf)
+	case "faust":
+		return newFaustSubmitter(conf)
 	default:
 		log.Fatalf("Unknown submitter protocol: %s", conf.SubProtocol)
 	}
