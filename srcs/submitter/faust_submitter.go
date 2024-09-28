@@ -30,6 +30,13 @@ func (s *FaustSubmitter) submitFlags(flags []string) ([]Response, error) {
 	}
 	defer conn.Close()
 
+	buf2 := make([]byte, 1024)
+
+	_, err = conn.Read(buf2)
+	if err != nil {
+		return nil, err
+	}
+
 	responses := make([]Response, 0, len(flags))
 	for _, flag := range flags {
 		_, err = conn.Write([]byte(flag + "\n"))

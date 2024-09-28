@@ -1,3 +1,5 @@
+version: '2.2'
+
 services:
   
   mongo:
@@ -13,13 +15,13 @@ services:
       - "5000:5000"
 
 # DEVELOPEMENT
-#    volumes:
-#      - src:/app/
+    volumes:
+      - src:/app/
 
-# volumes:
-#   src:
-#     driver: local
-#     driver_opts:
-#       type: none
-#       o: bind
-#       device: ./srcs/
+volumes:
+  src:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./srcs/
