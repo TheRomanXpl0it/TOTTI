@@ -80,7 +80,7 @@ func (db *DB) InsertFlags(flags []Flag) error {
 
 	opts := options.InsertMany().SetOrdered(false)
 	inserted, err := db.collection.InsertMany(context.TODO(), documents, opts)
-	log.Noticef("Inserted %v flags of %v posted\n", len(inserted.InsertedIDs), len(flags))
+	log.Noticef("Inserted %v flags of %v from %v\n", len(inserted.InsertedIDs), len(flags), flags[0].ExploitName)
 	if err != nil {
 		if mongo.IsDuplicateKeyError(err) {
 			return nil
