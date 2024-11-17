@@ -8,6 +8,11 @@ type Response struct {
 	Status bool   `json:"status"`
 }
 
+type ResponseError struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
 type SubmitterInterface interface {
 	submitFlags(flags []string) ([]Response, error)
 	Conf() *config.Config
@@ -18,6 +23,7 @@ type SubmitterInterface interface {
 	SubStolen() string
 	SubNop() string
 	SubNotAvailable() string
+	SubServiceDown() string
 }
 
 type Submitter struct {
@@ -29,7 +35,10 @@ type Submitter struct {
 	subStolen       string
 	subNop          string
 	subNotAvailable string
+	subServiceDown  string
 }
+
+const NO_SUB = "##########"
 
 func (s *Submitter) Conf() *config.Config {
 	return s.conf
@@ -61,4 +70,8 @@ func (s *Submitter) SubNop() string {
 
 func (s *Submitter) SubNotAvailable() string {
 	return s.subNotAvailable
+}
+
+func (s *Submitter) SubServiceDown() string {
+	return s.subServiceDown
 }

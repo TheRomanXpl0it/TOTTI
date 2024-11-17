@@ -21,12 +21,14 @@ type Counters struct {
 }
 
 var (
-	subInvalid  string
-	subYourOwn  string
-	subNop      string
-	subOld      string
-	subStolen   string
-	subAccepted string
+	subInvalid      string
+	subYourOwn      string
+	subNop          string
+	subOld          string
+	subStolen       string
+	subAccepted     string
+	subNotAvailable string
+	subServiceDown  string
 )
 
 func loadSubmitter(conf *config.Config) SubmitterInterface {
@@ -37,6 +39,8 @@ func loadSubmitter(conf *config.Config) SubmitterInterface {
 		return newCCITSubmitter(conf)
 	case "faust":
 		return newFaustSubmitter(conf)
+	case "pomo":
+		return newPomoSubmitter(conf)
 	default:
 		log.Fatalf("Unknown submitter protocol: %s", conf.SubProtocol)
 	}
@@ -88,6 +92,12 @@ func updateSubmittedFlags(conf *config.Config, responses []Response, totalCount 
 		} else if strings.Contains(msg, subAccepted) {
 			conf.DB.UpdateFlag(db.Flag{Flag: response.Flag, Status: db.DB_SUB, ServerResponse: db.DB_SUCC})
 			counters.Accepted++
+		} else if strings.Contains(msg, subNotAvailable) {
+			conf.DB.UpdateFlag(db.Flag{Flag: response.Flag, Status: db.DB_SUB, ServerResponse: db.DB_ERR})
+			counters.Old++
+		} else if strings.Contains(msg, subServiceDown) {
+			conf.DB.UpdateFlag(db.Flag{Flag: response.Flag, Status: db.DB_SUB, ServerResponse: db.DB_ERR})
+			counters.Invalid++
 		} else {
 			log.Criticalf("Invalid response: %+v\n", response)
 		}
@@ -104,6 +114,8 @@ func Loop(conf *config.Config) {
 	subOld = strings.ToLower(submitter.SubOld())
 	subStolen = strings.ToLower(submitter.SubStolen())
 	subAccepted = strings.ToLower(submitter.SubAccepted())
+	subNotAvailable = strings.ToLower(submitter.SubNotAvailable())
+	subServiceDown = strings.ToLower(submitter.SubServiceDown())
 
 	log.Infof("Starting submitter loop with %v submitter\n", submitter.Conf().SubProtocol)
 	queue := NewOrderedSet()

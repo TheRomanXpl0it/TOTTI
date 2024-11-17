@@ -11,25 +11,25 @@ import (
 	"time"
 )
 
-type CCITSubmitter struct {
+type PomoSubmitter struct {
 	Submitter
 }
 
-func newCCITSubmitter(c *config.Config) *CCITSubmitter {
-	return &CCITSubmitter{Submitter: Submitter{
+func newPomoSubmitter(c *config.Config) *PomoSubmitter {
+	return &PomoSubmitter{Submitter: Submitter{
 		conf:            c,
 		subAccepted:     "accepted",
-		subInvalid:      "invalid",
+		subInvalid:      "invalid or too old",
 		subOld:          "too old",
 		subYourOwn:      "your own",
-		subStolen:       "already claimed",
-		subNop:          "from NOP team",
+		subStolen:       "already stolen",
+		subNop:          NO_SUB,
 		subNotAvailable: "is not available",
-		subServiceDown:  NO_SUB,
+		subServiceDown:  "service is down",
 	}}
 }
 
-func (s *CCITSubmitter) submitFlags(flags []string) ([]Response, error) {
+func (s *PomoSubmitter) submitFlags(flags []string) ([]Response, error) {
 	flagsJSON, err := json.Marshal(flags)
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func (s *CCITSubmitter) submitFlags(flags []string) ([]Response, error) {
 		return nil, err
 	}
 
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "text/plain")
 	req.Header.Set("X-Team-Token", s.conf.TeamToken)
 
 	client := http.Client{Timeout: time.Duration(s.conf.SubInterval) * time.Second}
@@ -54,7 +54,7 @@ func (s *CCITSubmitter) submitFlags(flags []string) ([]Response, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.Header.Get("Content-Type") != "application/json; charset=utf-8" {
+	if resp.Header.Get("Content-Type") != "application/json" {
 		return nil, fmt.Errorf("invalid content type: %+v", resp)
 	}
 

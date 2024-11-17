@@ -18,8 +18,9 @@ func newFaustSubmitter(c *config.Config) *FaustSubmitter {
 		subOld:          "OLD",
 		subYourOwn:      "OWN",
 		subStolen:       "DUP",
-		subNop:          "from NOP team",
+		subNop:          NO_SUB,
 		subNotAvailable: "ERR",
+		subServiceDown:  NO_SUB,
 	}}
 }
 

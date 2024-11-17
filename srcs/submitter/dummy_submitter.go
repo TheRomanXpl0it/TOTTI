@@ -16,6 +16,7 @@ func newDummySubmitter(c *config.Config) *DummySubmitter {
 		subStolen:       "already stolen",
 		subNop:          "from NOP team",
 		subNotAvailable: "is not available",
+		subServiceDown:  NO_SUB,
 	}}
 }
 
