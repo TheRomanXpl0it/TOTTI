@@ -17,15 +17,18 @@ type PomoSubmitter struct {
 
 func newPomoSubmitter(c *config.Config) *PomoSubmitter {
 	return &PomoSubmitter{Submitter: Submitter{
-		conf:            c,
-		subAccepted:     "accepted",
-		subInvalid:      "invalid or too old",
-		subOld:          "too old",
-		subYourOwn:      "your own",
-		subStolen:       "already stolen",
-		subNop:          NO_SUB,
-		subNotAvailable: "is not available",
-		subServiceDown:  "service is down",
+		conf:              c,
+		subAccepted:       "accepted",
+		subInvalid:        "invalid or too old",
+		subOld:            "too old",
+		subYourOwn:        "your own",
+		subStolen:         "already stolen",
+		subNop:            NO_SUB,
+		subNotAvailable:   "is not available",
+		subServiceDown:    "service is down",
+		subDistpatchError: NO_SUB,
+		subNotActive:      NO_SUB,
+		subCritical:       NO_SUB,
 	}}
 }
 

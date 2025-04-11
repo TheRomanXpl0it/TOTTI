@@ -5,7 +5,7 @@ import "sub/config"
 type Response struct {
 	Msg    string `json:"msg"`
 	Flag   string `json:"flag"`
-	Status bool   `json:"status"`
+	Status string `json:"status"`
 }
 
 type ResponseError struct {
@@ -24,18 +24,24 @@ type SubmitterInterface interface {
 	SubNop() string
 	SubNotAvailable() string
 	SubServiceDown() string
+	SubDistpatchError() string
+	SubNotActive() string
+	SubCritical() string
 }
 
 type Submitter struct {
-	conf            *config.Config
-	subAccepted     string
-	subInvalid      string
-	subOld          string
-	subYourOwn      string
-	subStolen       string
-	subNop          string
-	subNotAvailable string
-	subServiceDown  string
+	conf              *config.Config
+	subAccepted       string
+	subInvalid        string
+	subOld            string
+	subYourOwn        string
+	subStolen         string
+	subNop            string
+	subNotAvailable   string
+	subServiceDown    string
+	subDistpatchError string
+	subNotActive      string
+	subCritical       string
 }
 
 const NO_SUB = "##########"
@@ -74,4 +80,16 @@ func (s *Submitter) SubNotAvailable() string {
 
 func (s *Submitter) SubServiceDown() string {
 	return s.subServiceDown
+}
+
+func (s *Submitter) SubDistpatchError() string {
+	return s.subDistpatchError
+}
+
+func (s *Submitter) SubNotActive() string {
+	return s.subNotActive
+}
+
+func (s *Submitter) SubCritical() string {
+	return s.subCritical
 }

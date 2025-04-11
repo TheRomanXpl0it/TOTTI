@@ -13,14 +13,7 @@ services:
     ports:
       - "5000:5000"
 
-# DEVELOPEMENT
-#     volumes:
-#       - src:/app/
+    volumes:
+      # - ./srcs/:/app/ # DEVELOPEMENT
+      - ./submitter.log:/app/submitter.log
 
-# volumes:
-#   src:
-#     driver: local
-#     driver_opts:
-#       type: none
-#       o: bind
-#       device: ./srcs/

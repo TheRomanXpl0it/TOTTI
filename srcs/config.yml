@@ -13,14 +13,16 @@ flag_format: "[A-Z0-9]{31}="
 
 flagid_url: "http://10.10.0.1:8081/flagIds"
 
-sub_protocol: "ccit"
+
+sub_protocol: "ccit-new"
+start_round: "2025-04-11 13:30:00" # "Y-m-d H:M:S"
 sub_limit: 1
-#sub_interval: 5
 sub_interval: 20
-#sub_max_payload_size: 30
 sub_max_payload_size: 5000
-#sub_url: "http://172.31.207.108:8000"
 sub_url: "http://10.10.0.1:8080/flags"
-start_round: "2024-10-20 11:00:00" # "Y-m-d H:M:S"
+
+# sub_interval: 5
+# sub_max_payload_size: 30
+# sub_url: "http://172.29.54.192:8000"
 
 database: "mongodb://mongo:27017"

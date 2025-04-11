@@ -4,7 +4,7 @@ COPY . /app/
 
 WORKDIR /app
 
-#RUN apk add --no-cache git make build-base libpcap-dev
+# RUN apk add --no-cache git make build-base libpcap-dev
 
 RUN cd /app/ && go build ./
 

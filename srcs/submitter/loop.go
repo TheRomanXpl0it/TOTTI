@@ -12,23 +12,29 @@ import (
 )
 
 type Counters struct {
-	Invalid  uint
-	Yours    uint
-	Nop      uint
-	Old      uint
-	Stolen   uint
-	Accepted uint
+	Critical      uint
+	NotActive     uint
+	DispatchError uint
+	Invalid       uint
+	Yours         uint
+	Nop           uint
+	Old           uint
+	Stolen        uint
+	Accepted      uint
 }
 
 var (
-	subInvalid      string
-	subYourOwn      string
-	subNop          string
-	subOld          string
-	subStolen       string
-	subAccepted     string
-	subNotAvailable string
-	subServiceDown  string
+	subInvalid        string
+	subYourOwn        string
+	subNop            string
+	subOld            string
+	subStolen         string
+	subAccepted       string
+	subNotAvailable   string
+	subServiceDown    string
+	subDistpatchError string
+	subNotActive      string
+	subCritical       string
 )
 
 func loadSubmitter(conf *config.Config) SubmitterInterface {
@@ -37,6 +43,8 @@ func loadSubmitter(conf *config.Config) SubmitterInterface {
 		return newDummySubmitter(conf)
 	case "ccit":
 		return newCCITSubmitter(conf)
+	case "ccit-new":
+		return newCCITNewSubmitter(conf)
 	case "faust":
 		return newFaustSubmitter(conf)
 	case "pomo":
@@ -65,6 +73,15 @@ func logFlagsCount(c Counters, totalCount int) {
 	if c.Stolen > 0 {
 		sLog = fmt.Sprintf("%s %d Stolen", sLog, c.Stolen)
 	}
+	if c.DispatchError > 0 {
+		sLog = fmt.Sprintf("%s %d DispatchError", sLog, c.DispatchError)
+	}
+	if c.NotActive > 0 {
+		sLog = fmt.Sprintf("%s %d NotActive", sLog, c.NotActive)
+	}
+	if c.Critical > 0 {
+		sLog = fmt.Sprintf("%s %d Critical", sLog, c.Critical)
+	}
 	log.Notice(sLog)
 }
 
@@ -74,6 +91,7 @@ func updateSubmittedFlags(conf *config.Config, responses []Response, totalCount 
 	for _, response := range responses {
 		msg := strings.ToLower(response.Msg)
 
+		// TODO: PLZ USE REGEX
 		if strings.Contains(msg, subInvalid) {
 			conf.DB.UpdateFlag(db.Flag{Flag: response.Flag, Status: db.DB_SUB, ServerResponse: db.DB_ERR})
 			counters.Invalid++
@@ -98,6 +116,16 @@ func updateSubmittedFlags(conf *config.Config, responses []Response, totalCount 
 		} else if strings.Contains(msg, subServiceDown) {
 			conf.DB.UpdateFlag(db.Flag{Flag: response.Flag, Status: db.DB_SUB, ServerResponse: db.DB_ERR})
 			counters.Invalid++
+		} else if strings.Contains(msg, subDistpatchError) {
+			conf.DB.UpdateFlag(db.Flag{Flag: response.Flag, Status: db.DB_SUB, ServerResponse: db.DB_ERR})
+			counters.DispatchError++
+		} else if strings.Contains(msg, subNotActive) {
+			conf.DB.UpdateFlag(db.Flag{Flag: response.Flag, Status: db.DB_NSUB, ServerResponse: db.DB_ERR})
+			counters.NotActive++
+		} else if strings.Contains(msg, subCritical) {
+			conf.DB.UpdateFlag(db.Flag{Flag: response.Flag, Status: db.DB_SUB, ServerResponse: db.DB_ERR})
+			counters.Critical++
+			log.Criticalf("NOTIFY THE ORGANIZERS: %+v", msg)
 		} else {
 			log.Criticalf("Invalid response: %+v\n", response)
 		}
@@ -116,12 +144,14 @@ func Loop(conf *config.Config) {
 	subAccepted = strings.ToLower(submitter.SubAccepted())
 	subNotAvailable = strings.ToLower(submitter.SubNotAvailable())
 	subServiceDown = strings.ToLower(submitter.SubServiceDown())
+	subDistpatchError = strings.ToLower(submitter.SubDistpatchError())
+	subNotActive = strings.ToLower(submitter.SubNotActive())
+	subCritical = strings.ToLower(submitter.SubCritical())
 
 	log.Infof("Starting submitter loop with %v submitter\n", submitter.Conf().SubProtocol)
 	queue := NewOrderedSet()
 	for {
 		start_time := uint32(time.Now().Unix())
-
 		expirationTime := primitive.Timestamp{T: start_time - uint32(conf.FlagAlive)}
 
 		flagsFromDB, err := conf.DB.GetFlags(expirationTime)

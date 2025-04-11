@@ -11,28 +11,28 @@ import (
 	"time"
 )
 
-type CCITSubmitter struct {
+type CCITNewSubmitter struct {
 	Submitter
 }
 
-func newCCITSubmitter(c *config.Config) *CCITSubmitter {
-	return &CCITSubmitter{Submitter: Submitter{
+func newCCITNewSubmitter(c *config.Config) *CCITNewSubmitter {
+	return &CCITNewSubmitter{Submitter: Submitter{
 		conf:              c,
-		subAccepted:       "accepted",
+		subAccepted:       "flag claimed",
 		subInvalid:        "invalid",
 		subOld:            "too old",
 		subYourOwn:        "your own",
 		subStolen:         "already claimed",
-		subNop:            "from NOP team",
-		subNotAvailable:   "is not available",
+		subNop:            "from nop team",
+		subNotAvailable:   "not available",
 		subServiceDown:    NO_SUB,
-		subDistpatchError: NO_SUB,
-		subNotActive:      NO_SUB,
-		subCritical:       NO_SUB,
+		subDistpatchError: "the check which dispatched this flag didn't terminate successfully",
+		subNotActive:      "the flag is not active yet",
+		subCritical:       "notify the organizers",
 	}}
 }
 
-func (s *CCITSubmitter) submitFlags(flags []string) ([]Response, error) {
+func (s *CCITNewSubmitter) submitFlags(flags []string) ([]Response, error) {
 	flagsJSON, err := json.Marshal(flags)
 	if err != nil {
 		return nil, err

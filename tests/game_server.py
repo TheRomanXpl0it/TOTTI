@@ -17,23 +17,14 @@ class ServerHandler(http.server.BaseHTTPRequestHandler):
 
 			body = []
 			for flag in recived:
-				'''
-				subAccepted:     "accepted",
-				subInvalid:      "invalid",
-				subOld:          "too old",
-				subYourOwn:      "your own",
-				subStolen:       "already claimed",
-				subNop:          "from NOP team",
-				subNotAvailable: "is not available",
-				'''
 				choice = random.choices(
-					population=['accepted', 'invalid', 'too old', 'your own', 'already claimed', 'from NOP team'],
-					weights=(1, 0.1, 0.1, 0.1, 0.1, 0.1),
+					population=['flag claimed', 'invalid', 'too old', 'your own', 'already claimed', 'from NOP team', 'not available', 'the check which dispatched this flag didn\'t terminate successfully', 'the flag is not active yet, wait for next round', 'notify the organizers and retry later'],
+					weights=(1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1),
 					k=1
 				)[0]
-				body.append({"msg": f"[{flag}] {choice}", "flag": flag, "status": True})
-			
-			if random.random() < 0.1:
+				body.append({"msg": f"[{flag}] {choice}", "flag": flag, "status": 'AAAAA'})
+
+			if random.random() < 0.05:
 				body = {"code": "RATE_LIMIT", "message": "[RATE_LIMIT] Rate limit exceeded"}
 				body = json.dumps(body)
 				self.send_response(500)
@@ -58,6 +49,8 @@ class ServerHandler(http.server.BaseHTTPRequestHandler):
 handler = ServerHandler
 
 httpd = socketserver.TCPServer(("", PORT), handler)
-
-print("Serving at port", PORT)
-httpd.serve_forever()
+try:
+	print("Serving at port", PORT)
+	httpd.serve_forever()
+except KeyboardInterrupt:
+	httpd.shutdown()

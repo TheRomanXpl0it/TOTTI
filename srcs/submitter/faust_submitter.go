@@ -12,15 +12,18 @@ type FaustSubmitter struct {
 
 func newFaustSubmitter(c *config.Config) *FaustSubmitter {
 	return &FaustSubmitter{Submitter: Submitter{
-		conf:            c,
-		subAccepted:     "OK",
-		subInvalid:      "INV",
-		subOld:          "OLD",
-		subYourOwn:      "OWN",
-		subStolen:       "DUP",
-		subNop:          NO_SUB,
-		subNotAvailable: "ERR",
-		subServiceDown:  NO_SUB,
+		conf:              c,
+		subAccepted:       "OK",
+		subInvalid:        "INV",
+		subOld:            "OLD",
+		subYourOwn:        "OWN",
+		subStolen:         "DUP",
+		subNop:            NO_SUB,
+		subNotAvailable:   "ERR",
+		subServiceDown:    NO_SUB,
+		subDistpatchError: NO_SUB,
+		subNotActive:      NO_SUB,
+		subCritical:       NO_SUB,
 	}}
 }
 
